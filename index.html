@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 برنامج التشفير</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body { font-family: sans-serif; background:#1e3d7b; color:white; text-align:center; padding:20px; }
+    h1 { margin-bottom:20px; }
+    input, textarea { width:90%; padding:10px; margin:10px 0; border-radius:8px; border:none; font-size:16px; }
+    textarea { height:100px; }
+    button { padding:10px 20px; margin:5px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+    .encrypt { background:#27ae60; color:white; }
+    .decrypt { background:#2980b9; color:white; }
+    .copy { background:#8e44ad; color:white; }
+    #result { background:#ecf0f1; color:#2c3e50; padding:15px; border-radius:8px; margin-top:15px; word-wrap:break-word; }
+  </style>
+</head>
+<body>
+  <h1>🔐 برنامج التشفير</h1>
+  <input type="password" id="password" placeholder="أدخل كلمة المرور"><br>
+  <textarea id="text" placeholder="النص هنا ..."></textarea><br>
+  <button class="encrypt" onclick="encryptText()">تشفير</button>
+  <button class="decrypt" onclick="decryptText()">فك التشفير</button>
+  <button class="copy" onclick="copyResult()">نسخ النتيجة</button>
+  <div id="result">النتيجة ستظهر هنا...</div>
+
+  <script>
+    function encryptText() {
+      const password = document.getElementById('password').value;
+      const text = document.getElementById('text').value;
+      if (!password || !text) return alert("أدخل كلمة المرور والنص");
+      const encrypted = CryptoJS.AES.encrypt(text, password).toString();
+      document.getElementById('result').textContent = encrypted;
+    }
+
+    function decryptText() {
+      const password = document.getElementById('password').value;
+      const text = document.getElementById('text').value;
+      if (!password || !text) return alert("أدخل كلمة المرور والنص المشفر");
+      try {
+        const decrypted = CryptoJS.AES.decrypt(text, password).toString(CryptoJS.enc.Utf8);
+        if (!decrypted) throw new Error("كلمة مرور خاطئة أو نص غير صحيح");
+        document.getElementById('result').textContent = decrypted;
+      } catch {
+        document.getElementById('result').textContent = "❌ خطأ: كلمة المرور أو النص غير صحيح";
+      }
+    }
+
+    function copyResult() {
+      const text = document.getElementById('result').textContent;
+      navigator.clipboard.writeText(text).then(() => alert("✅ تم النسخ"));
+    }
+  </script>
+</body>
+</html>
